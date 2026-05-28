@@ -1,6 +1,6 @@
-import {  useState } from "react";
+import { useEffect, useState } from "react";
 
-const ExpenseForm = ({ onSubmit }) => {
+const ExpenseForm = ({ onSubmit,editData }) => {
   const initialValue = {
     amount: "",
     description: "",
@@ -9,16 +9,29 @@ const ExpenseForm = ({ onSubmit }) => {
 
   const [formData, setFormData] = useState(initialValue);
 
+  useEffect(() => {
+    if(editData === null){}
+    else{
+      setFormData(editData)
+    }
+  },[editData])
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    setFormData({ ...formData, [name]: value});
+
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const expenseObject = {...formData,id:Date.now()}
+
+    const expenseObject = {
+      ...formData,
+      id: Date.now(),
+    };
+
     onSubmit(expenseObject);
+
     setFormData(initialValue);
   };
 
@@ -26,7 +39,8 @@ const ExpenseForm = ({ onSubmit }) => {
     <div>
       <form action="" onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="amount">Enter ammount</label>
+          <label htmlFor="amount">Enter amount</label>
+
           <input
             type="number"
             name="amount"
@@ -40,6 +54,7 @@ const ExpenseForm = ({ onSubmit }) => {
 
         <div>
           <label htmlFor="description">Enter the description</label>
+
           <input
             type="text"
             name="description"
@@ -52,7 +67,10 @@ const ExpenseForm = ({ onSubmit }) => {
         </div>
 
         <div>
-          <label htmlFor="catagory">Select Catagory of expense:</label>
+          <label htmlFor="catagory">
+            Select Catagory of expense:
+          </label>
+
           <select
             name="catagory"
             id="catagory"
@@ -60,6 +78,7 @@ const ExpenseForm = ({ onSubmit }) => {
             value={formData.catagory}
           >
             <option value="" disabled hidden></option>
+
             <option value="Food">Food</option>
             <option value="Travel">Travel</option>
             <option value="grocery">grocery</option>
